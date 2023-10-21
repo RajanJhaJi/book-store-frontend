@@ -6,25 +6,37 @@ import axios from "axios";
 import { API_BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import Loader from "./UI/Loading";
+import Search from "./UI/Search";
+import { useSearchParams } from "react-router-dom";
 
 const Books = () => {
   const [responseObj, setResponseObj] = useState({
     books: [],
-    pages: 1,
+    pages: 0,
     isLoading: true,
   });
+  const [searchParams] = useSearchParams();
+  const [queryParam, setQueryParam] = useState(
+    searchParams ? searchParams.get("search") : ""
+  );
   const [page, setPage] = useState(1);
 
+  for (const entry of searchParams.entries()) {
+    console.log(entry);
+  }
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(`?page=${page}`);
+    const query = queryParam ? `&search=${queryParam}` : "";
+    queryParam ? navigate(`?page=${page}${query}`) : navigate(`?page=${page}`);
     setResponseObj((prevState) => ({
       ...prevState,
       isLoading: true,
     }));
 
-    const url = `${API_BASE_URL}books/?page=${page}`;
+    console.log("this is the value of query", query);
+
+    const url = `${API_BASE_URL}books/?page=${page}${query}`;
 
     console.log("hitting url", url);
 
@@ -47,7 +59,11 @@ const Books = () => {
           isLoading: false,
         }));
       });
-  }, [page]);
+  }, [page, queryParam]);
+
+  const handleSearch = (inputRef) => {
+    setQueryParam(inputRef.current.value);
+  };
 
   // Handle Pagination
   const handlePagination = (event, value) => {
@@ -67,11 +83,23 @@ const Books = () => {
       >
         {!responseObj.isLoading ? (
           <>
+            <Box
+              sx={{
+                marginBottom: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Search handleSearch={handleSearch} value={queryParam} />
+            </Box>
             <BookCard booksList={responseObj?.books} />
-            <PaginationRounded
-              handlePagination={handlePagination}
-              totalPages={responseObj?.pages}
-            />
+            {responseObj?.pages > 1 ? (
+              <PaginationRounded
+                handlePagination={handlePagination}
+                totalPages={responseObj?.pages}
+              />
+            ) : null}
           </>
         ) : (
           <Loader />

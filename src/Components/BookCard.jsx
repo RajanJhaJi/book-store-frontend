@@ -19,7 +19,6 @@ export default function BookCard({ booksList }) {
       container
       spacing={2}
       sx={{
-        // bgcolor: "blue",
         width: "85vw",
       }}
     >
