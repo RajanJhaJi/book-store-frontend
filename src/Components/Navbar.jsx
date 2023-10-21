@@ -22,8 +22,6 @@ function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log("this is the value of auth", auth);
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
