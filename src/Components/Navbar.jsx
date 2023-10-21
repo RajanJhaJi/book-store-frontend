@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import LibraryBooks from "@mui/icons-material/LibraryBooks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authData, clearToken } from "../redux/slices/auth";
 
@@ -20,6 +20,7 @@ function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const auth = useSelector(authData);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   console.log("this is the value of auth", auth);
 
@@ -31,6 +32,7 @@ function Navbar() {
 
   const handleLogout = () => {
     dispatch(clearToken());
+    navigate("/login");
   };
 
   return (

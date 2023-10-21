@@ -1,21 +1,28 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { API_BASE_URL } from "../utils/constants";
 import { useSelector } from "react-redux";
 import { authData } from "../redux/slices/auth";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function AddBook() {
   const auth = useSelector(authData);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!auth?.isAuthenticated) {
+      navigate("/login");
+    }
+  }, [auth]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -37,15 +44,15 @@ export default function AddBook() {
 
     console.log("this is the value of auth token", auth);
 
-    // axios
-    //   .post(url, userData, config)
-    //   .then((response) => {
-    //     console.log("Response", response.data);
-    //     alert(`Created Book:- ${response.data.title}`);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response.data);
-    //   });
+    axios
+      .post(url, userData, config)
+      .then((response) => {
+        console.log("Response", response.data);
+        alert(`Created Book:- ${response.data.title}`);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
   };
 
   return (
