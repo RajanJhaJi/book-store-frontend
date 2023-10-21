@@ -52,6 +52,7 @@ export default function AddBook() {
       })
       .catch((error) => {
         console.log(error.response.data);
+        alert(error.message);
       });
   };
 
@@ -96,8 +97,6 @@ export default function AddBook() {
                 name="publication_year"
                 label="publication year"
                 type="number"
-                min="1000"
-                max="3000"
                 defaultValue={2023}
                 step="1"
                 id="year"
